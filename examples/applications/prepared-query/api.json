@@ -1,0 +1,12 @@
+{
+    "Name": "api",
+    "Service": {
+        "Service": "api",
+        "Failover": {
+            "Datacenters": [
+                "ap-southeast-1",
+                "ap-south-1"
+            ]
+        }
+    }
+}

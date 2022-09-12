@@ -1,0 +1,10 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: TerminatingGateway
+metadata:
+  name: aws-terminating-gateway
+spec:
+  services:
+    - name: jsonplaceholder
+      caFile: /consul/userconfig/jsonplaceholder-ca/my-ca
+      sni: "*.typicode.com"
+    - name: jsonplaceholder-http

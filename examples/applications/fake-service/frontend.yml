@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 8080
+      targetPort: 9090
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+        consul.hashicorp.com/enable-metrics-merging: "false"
+        consul.hashicorp.com/connect-service-upstreams: 'jsonplaceholder:9091,jsonplaceholder-http:9092'
+    spec:
+      serviceAccountName: frontend
+      containers:
+        - name: frontend
+          image: nicholasjackson/fake-service:v0.7.8
+          ports:
+            - containerPort: 9090
+          env:
+            - name: 'LISTEN_ADDR'
+              value: '0.0.0.0:9090'
+            - name: 'UPSTREAM_URIS'
+              value: 'http://localhost:9091/users'
+            - name: 'NAME'
+              value: 'frontend'
+            - name: 'MESSAGE'
+              value: 'Hello World'
+          securityContext:
+            privileged: true

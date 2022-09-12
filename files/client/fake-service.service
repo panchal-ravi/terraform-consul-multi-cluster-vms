@@ -1,0 +1,11 @@
+[Unit]
+Description=fake-service
+After=network.target
+
+[Service]
+ExecStart=/opt/myapp/fake-service
+User=ubuntu
+EnvironmentFile=/opt/myapp/fake-service.config
+
+[Install]
+WantedBy=multi-user.target

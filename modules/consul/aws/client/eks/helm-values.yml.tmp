@@ -1,0 +1,76 @@
+global:
+  enabled: false
+  datacenter: "aws-dc1"
+  image: "hashicorp/consul-enterprise:1.12.4-ent"
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    caCert:
+      secretName: consul-ca-cert
+      secretKey: key
+  enableConsulNamespaces: true
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+  gossipEncryption:
+    secretName: consul-gossip-encryption-key
+    secretKey: key
+  metrics:
+    enabled: true
+client:
+  enabled: true
+  exposeGossipPorts: true
+  join:
+    - 10.200.20.112
+    - 10.200.21.193
+    - 10.200.22.70
+  
+externalServers:
+  enabled: true
+  tlsServerName: "server.aws-dc1.consul"
+  hosts:
+    - 10.200.20.112
+    - 10.200.21.193
+    - 10.200.22.70
+  
+syncCatalog:
+  enabled: true
+  k8sDenyNamespaces: ["kube-system", "kube-public", "consul"]
+  consulNamespaces:
+    mirroringK8S: true
+  addK8SNamespaceSuffix: false
+connectInject:
+  enabled: true
+  envoyExtraArgs: "--log-level debug"
+  consulNamespaces:
+    mirroringK8S: true  
+  namespaceSelector: |
+    matchLabels:
+      consul: enabled
+controller:
+  enabled: true
+meshGateway:
+  enabled: true
+  replicas: 1
+ingressGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+    service:
+      type: LoadBalancer
+      ports:
+        - port: 80
+terminatingGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+    extraVolumes:
+    - type: secret
+      name: jsonplaceholder-ca
+      items: 
+      - key: ca
+        path: my-ca 
+  gateways:
+    - name: aws-terminating-gateway
+dns:
+  enabled: true

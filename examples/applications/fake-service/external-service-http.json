@@ -1,0 +1,14 @@
+{
+  "Node": "jsonplaceholder-http",
+  "Address": "jsonplaceholder.typicode.com",
+  "NodeMeta": {
+    "external-node": "true",
+    "external-probe": "true"
+  },
+  "Service": {
+    "Address": "jsonplaceholder.typicode.com",
+    "ID": "jsonplaceholder-http",
+    "Service": "jsonplaceholder-http",
+    "Port": 80
+  }
+}

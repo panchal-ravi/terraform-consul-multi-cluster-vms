@@ -1,0 +1,70 @@
+global:
+  enabled: false
+  datacenter: "${datacenter}"
+  image: "hashicorp/consul-enterprise:${consul_version}"
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    caCert:
+      secretName: consul-ca-cert
+      secretKey: key
+  enableConsulNamespaces: true
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+  gossipEncryption:
+    secretName: consul-gossip-encryption-key
+    secretKey: key
+  metrics:
+    enabled: true
+client:
+  enabled: true
+  exposeGossipPorts: true
+  join:
+  %{ for addr in server_ips ~}
+  - ${addr}
+  %{ endfor ~}
+
+externalServers:
+  enabled: true
+  tlsServerName: "server.${datacenter}.consul"
+  hosts:
+  %{ for addr in server_ips ~}
+  - ${addr}
+  %{ endfor ~}
+
+syncCatalog:
+  enabled: true
+  k8sDenyNamespaces: ["kube-system", "kube-public", "consul"]
+  consulNamespaces:
+    mirroringK8S: true
+  addK8SNamespaceSuffix: false
+connectInject:
+  enabled: true
+  envoyExtraArgs: "--log-level debug"
+  consulNamespaces:
+    mirroringK8S: true  
+  namespaceSelector: |
+    matchLabels:
+      consul: enabled
+controller:
+  enabled: true
+meshGateway:
+  enabled: true
+  replicas: 1
+ingressGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+    service:
+      type: LoadBalancer
+      ports:
+        - port: 80
+terminatingGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+  gateways:
+    - name: ${cloud}-terminating-gateway
+dns:
+  enabled: true

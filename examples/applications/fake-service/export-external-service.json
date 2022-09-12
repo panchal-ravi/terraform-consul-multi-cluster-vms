@@ -1,0 +1,16 @@
+{
+    "Kind": "exported-services",
+    "Partition": "external",
+    "Name": "external",
+    "Services": [
+        {
+            "Name": "jsonplaceholder",
+            "Namespace": "default",
+            "Consumers": [
+                {
+                    "Partition": "default"
+                }
+            ]
+        }
+    ]
+}
