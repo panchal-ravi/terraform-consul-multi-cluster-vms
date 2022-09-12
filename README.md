@@ -1,8 +1,10 @@
 This repo is to build WAN federated Consul clusters across 2 AWS regions.
 
-Deployment Architecture
+## Deployment Architecture
 ![Consul Deployment architecture](https://github.com/panchal-ravi/terraform-consul-multi-cluster-vms/blob/main/files/Consul-Multi-Region-Cluster-VM.png?raw=true)
 
+## <TODO>
+Steps to generate Consul CA key and certificate
 
 ## 1. Create folder for private SSH key
 
